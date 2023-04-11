@@ -202,7 +202,7 @@ class Background {
       backgroundColor:
         ((appearance === undefined || appearance === 'auto') &&
           nativeTheme.shouldUseDarkColors) ||
-          appearance === 'dark'
+        appearance === 'dark'
           ? '#222'
           : '#fff',
     };
@@ -469,6 +469,7 @@ class Background {
     });
 
     if (!isMac) {
+      // eslint-disable-next-line no-unused-vars
       app.on('second-instance', (e, cl, wd) => {
         if (this.window) {
           this.window.show();
