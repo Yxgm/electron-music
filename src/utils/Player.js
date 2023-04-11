@@ -903,6 +903,8 @@ export default class {
   }
   playPersonalFM() {
     this._isPersonalFM = true;
+    console.log(this.currentTrackID !== this._personalFMTrack.id);
+
     if (!this._enabled) this._enabled = true;
     if (this.currentTrackID !== this._personalFMTrack.id) {
       this._replaceCurrentTrack(this._personalFMTrack.id, true);

@@ -6,6 +6,7 @@ const log = text => {
   console.log(`${clc.blueBright('[globalShortcut.js]')} ${text}`);
 };
 
+// 注册快捷键
 export function registerGlobalShortcut(win, store) {
   log('registerGlobalShortcut');
   let shortcuts = store.get('settings.shortcuts');

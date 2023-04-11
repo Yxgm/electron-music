@@ -217,6 +217,7 @@ export default {
         return;
       }
       if (data.code === 200) {
+        console.log(data.cookie);
         setCookies(data.cookie);
         this.updateData({ key: 'loginMode', value: 'account' });
         this.$store.dispatch('fetchUserProfile').then(() => {

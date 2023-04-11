@@ -1,3 +1,6 @@
+/**
+ * @description 主进程，控制原生操作、应用的生命周期、管理渲染进程，运行在node.js环境中，
+ */
 'use strict';
 import {
   app,
@@ -199,7 +202,7 @@ class Background {
       backgroundColor:
         ((appearance === undefined || appearance === 'auto') &&
           nativeTheme.shouldUseDarkColors) ||
-        appearance === 'dark'
+          appearance === 'dark'
           ? '#222'
           : '#fff',
     };
@@ -376,11 +379,8 @@ class Background {
   }
 
   handleAppEvents() {
-    // electron初始化完成，进行回调函数
+    // electron初始化完成，进行回调函数，准备开始创建browser window
     app.on('ready', async () => {
-      // This method will be called when Electron has finished
-      // initialization and is ready to create browser windows.
-      // Some APIs can only be used after this event occurs.
       log('app ready event');
 
       // 如果是开发环境，打开devtool工具
@@ -388,11 +388,12 @@ class Background {
         this.initDevtools();
       }
 
-      // create window
+      // 实例化window
       this.createWindow();
       this.window.once('ready-to-show', () => {
         this.window.show();
       });
+      // 主进程监听应用的各种事件
       this.handleWindowEvents();
 
       // create tray

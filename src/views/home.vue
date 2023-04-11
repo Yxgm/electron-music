@@ -1,9 +1,17 @@
 <template>
   <div v-show="show" class="home">
-    <div
-      v-if="settings.showPlaylistsByAppleMusic !== false"
-      class="index-row first-row"
-    >
+    <!-- 私人电台 -->
+    <div v-if="isLogin">
+      <div class="index-row first-row">
+        <div class="title"> For You </div>
+        <div class="for-you-row">
+          <DailyTracksCard ref="DailyTracksCard" />
+          <FMCard />
+        </div>
+      </div>
+    </div>
+    <!-- 各类专辑 -->
+    <div v-if="settings.showPlaylistsByAppleMusic !== false" class="index-row">
       <div class="title"> by Apple Music </div>
       <CoverRow
         :type="'playlist'"
@@ -12,6 +20,7 @@
         :image-size="1024"
       />
     </div>
+    <!-- 推荐歌单 -->
     <div class="index-row">
       <div class="title">
         {{ $t('home.recommendPlaylist') }}
@@ -24,13 +33,6 @@
         :items="recommendPlaylist.items"
         sub-text="copywriter"
       />
-    </div>
-    <div class="index-row">
-      <div class="title"> For You </div>
-      <div class="for-you-row">
-        <DailyTracksCard ref="DailyTracksCard" />
-        <FMCard />
-      </div>
     </div>
     <div class="index-row">
       <div class="title">{{ $t('home.recommendArtist') }}</div>
@@ -74,6 +76,7 @@ import { toplistOfArtists } from '@/api/artist';
 import { newAlbums } from '@/api/album';
 import { byAppleMusic } from '@/utils/staticData';
 import { getRecommendPlayList } from '@/utils/playList';
+import { isAccountLoggedIn } from '@/utils/auth';
 import NProgress from 'nprogress';
 import { mapState } from 'vuex';
 import CoverRow from '@/components/CoverRow.vue';
@@ -102,6 +105,9 @@ export default {
     ...mapState(['settings']),
     byAppleMusic() {
       return byAppleMusic;
+    },
+    isLogin() {
+      return isAccountLoggedIn();
     },
   },
   activated() {
