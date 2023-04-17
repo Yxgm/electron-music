@@ -221,7 +221,7 @@ export default {
         this.updateData({ key: 'loginMode', value: 'account' });
         this.$store.dispatch('fetchUserProfile').then(() => {
           this.$store.dispatch('fetchLikedPlaylist').then(() => {
-            this.$router.push({ path: '/library' });
+            this.$router.push({ path: '/' });
           });
         });
       } else {
@@ -229,10 +229,12 @@ export default {
         nativeAlert(data.msg ?? data.message ?? '账号或密码错误，请检查');
       }
     },
+    // 根据后端key返回的key，生成二维码
     getQrCodeKey() {
       return loginQrCodeKey().then(result => {
         if (result.code === 200) {
           this.qrCodeKey = result.data.unikey;
+          //取出key quick response，生成二维码
           QRCode.toString(
             `https://music.163.com/login?codekey=${this.qrCodeKey}`,
             {

@@ -25,14 +25,17 @@ const UNPLAYABLE_CONDITION = {
 
 const electron =
   process.env.IS_ELECTRON === true ? window.require('electron') : null;
+
 const ipcRenderer =
   process.env.IS_ELECTRON === true ? electron.ipcRenderer : null;
+
 const delay = ms =>
   new Promise(resolve => {
     setTimeout(() => {
       resolve('');
     }, ms);
   });
+
 const excludeSaveKeys = [
   '_playing',
   '_personalFMLoading',
@@ -251,6 +254,7 @@ export default class {
       }
     }, 1000);
   }
+  // 获得下一首
   _getNextTrack() {
     const next = this._reversed ? this.current - 1 : this.current + 1;
 
@@ -322,6 +326,12 @@ export default class {
       });
     }
   }
+
+  /**
+   * @description   重新替换howler实例，
+   * @param {string} source mp3的url路径
+   * @param {boolean} autoplay 是否自动播放
+   */
   _playAudioSource(source, autoplay = true) {
     Howler.unload();
     this._howler = new Howl({
@@ -378,6 +388,7 @@ export default class {
 
     return source;
   }
+
   _getAudioSourceFromCache(id) {
     return getTrackSource(id).then(t => {
       if (!t) return null;
@@ -480,6 +491,7 @@ export default class {
         return source ?? this._getAudioSourceFromUnblockMusic(track);
       });
   }
+  // 替换当前
   _replaceCurrentTrack(
     id,
     autoplay = true,
@@ -490,8 +502,10 @@ export default class {
     }
     return getTrackDetail(id).then(data => {
       const track = data.songs[0];
+
       this._currentTrack = track;
       this._updateMediaSessionMetaData(track);
+      // 替换当前音频数据
       return this._replaceCurrentTrackAudio(
         track,
         autoplay,
@@ -501,6 +515,7 @@ export default class {
     });
   }
   /**
+   * @description 替换当前音频数据
    * @returns 是否成功加载音频，并使用加载完成的音频替换了howler实例
    */
   _replaceCurrentTrackAudio(
@@ -590,9 +605,8 @@ export default class {
     }
   }
   _updateMediaSessionMetaData(track) {
-    if ('mediaSession' in navigator === false) {
-      return;
-    }
+    if (!('mediaSession' in navigator)) return;
+
     let artists = track.ar.map(a => a.name);
     const metadata = {
       title: track.name,
@@ -615,6 +629,7 @@ export default class {
     };
 
     navigator.mediaSession.metadata = new window.MediaMetadata(metadata);
+
     if (isCreateMpris) {
       ipcRenderer?.send('metadata', metadata);
     }
@@ -634,8 +649,10 @@ export default class {
   _nextTrackCallback() {
     this._scrobble(this._currentTrack, 0, true);
     if (!this.isPersonalFM && this.repeatMode === 'one') {
+      //循环播放
       this._replaceCurrentTrack(this.currentTrackID);
     } else {
+      //下一首
       this._playNextTrack(this.isPersonalFM);
     }
   }
@@ -685,6 +702,7 @@ export default class {
     if (isPersonal) {
       this.playNextFMTrack();
     } else {
+      //
       this.playNextTrack();
     }
   }
@@ -692,6 +710,7 @@ export default class {
   appendTrack(trackID) {
     this.list.append(trackID);
   }
+  // 下一首
   playNextTrack() {
     // TODO: 切换歌曲时增加加载中的状态
     const [trackID, index] = this._getNextTrack();
@@ -805,6 +824,7 @@ export default class {
     });
   }
   playOrPause() {
+    // 是否在播放中
     if (this._howler?.playing()) {
       this.pause();
     } else {
@@ -903,8 +923,6 @@ export default class {
   }
   playPersonalFM() {
     this._isPersonalFM = true;
-    console.log(this.currentTrackID !== this._personalFMTrack.id);
-
     if (!this._enabled) this._enabled = true;
     if (this.currentTrackID !== this._personalFMTrack.id) {
       this._replaceCurrentTrack(this._personalFMTrack.id, true);

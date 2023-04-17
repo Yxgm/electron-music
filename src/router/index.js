@@ -13,16 +13,18 @@ const routes = [
       savePosition: true,
     },
   },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/login.vue'),
-  },
-  {
-    path: '/login/username',
-    name: 'loginUsername',
-    component: () => import('@/views/loginUsername.vue'),
-  },
+  // 登陆的中间状态，删掉
+  // {
+  //   path: '/login',
+  //   name: 'login',
+  //   component: () => import('@/views/login.vue'),
+  // },
+  // 用户名登陆，只读状态
+  // {
+  //   path: '/login/username',
+  //   name: 'loginUsername',
+  //   component: () => import('@/views/loginUsername.vue'),
+  // },
   {
     path: '/login/account',
     name: 'loginAccount',

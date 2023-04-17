@@ -20,7 +20,7 @@
           <svg-icon icon-class="arrow-right"></svg-icon>
         </div>
       </div>
-      <div
+      <!-- <div
         class="card"
         @mouseover="activeCard = 2"
         @mouseleave="activeCard = 0"
@@ -33,7 +33,7 @@
           </div>
           <svg-icon icon-class="arrow-right"></svg-icon>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
